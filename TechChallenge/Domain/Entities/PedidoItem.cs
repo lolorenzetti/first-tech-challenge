@@ -1,10 +1,6 @@
-﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TechChallenge.Domain._Shared;
+using TechChallenge.Domain.Factory;
+using TechChallenge.Domain.Shared;
 
 namespace Domain.Entities
 {
@@ -16,7 +12,7 @@ namespace Domain.Entities
             Quantidade = quantidade;
             Preco = preco;
             Observacao = observacao;
-            Validate(this, new PedidoItemValidator());
+            Validate();
         }
 
         public int PedidoId { get; private set; } // Referência ao agregado root (Pedido)
@@ -39,27 +35,12 @@ namespace Domain.Entities
         {
             Observacao = observacao;
         }
-    }
 
-    public class PedidoItemValidator : AbstractValidator<PedidoItem>
-    {
-        public PedidoItemValidator()
+        public override void Validate()
         {
-            RuleFor(p => p.ProdutoId)
-                .NotEmpty()
-                .WithMessage("É necessário informar um produto válido");
-
-            RuleFor(p => p.Quantidade)
-                .GreaterThanOrEqualTo(1)
-                .WithMessage("Quantidade deve ser maior do que zero");
-
-            RuleFor(p => p.Preco)
-                .GreaterThan(0)
-                .WithMessage("O preço deve ser maior que zero");
-
-            RuleFor(p => p.Observacao)
-                .MaximumLength(255)
-                .WithMessage("Tamanho máximo para observaçao é de 255 caracteres");
+            PedidoItemValidatorFactory.Create().Validar(this);
+            if (this.Notification.HasErrors())
+                throw new NotificationError(this.Notification.GetErrors());
         }
     }
 }

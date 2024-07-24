@@ -1,11 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Ports;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infra.Data.Repository
 {
@@ -24,14 +19,14 @@ namespace Infra.Data.Repository
             _context.SaveChanges();
         }
 
-        public async Task<int> Cria(Pedido pedido)
+        public async Task<Pedido> Cria(Pedido pedido)
         {
             var p = await _context.Pedidos.AddAsync(pedido);
             await _context.PedidoItems.AddRangeAsync(pedido.Itens);
 
             _context.SaveChanges();
 
-            return p.Entity.Id;
+            return p.Entity;
         }
 
         public async Task<List<Pedido>> ListaTodos()

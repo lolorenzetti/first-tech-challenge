@@ -1,7 +1,6 @@
-﻿using Application.Features.PedidoContext;
-using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using TechChallenge.Application.DTO;
+using TechChallenge.Controller;
 
 namespace API.Controllers
 {
@@ -9,11 +8,11 @@ namespace API.Controllers
     [ApiController]
     public class PedidoController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly IPedidoService _service;
 
-        public PedidoController(IMediator mediator)
+        public PedidoController(IPedidoService mediator)
         {
-            _mediator = mediator;
+            _service = mediator;
         }
 
         /// <summary>
@@ -23,15 +22,15 @@ namespace API.Controllers
         /// Cria um novo pedido na base de dados. Exemplo:
         /// { "clienteId": null, "itens": [{ "id": 1, "quantidade": 1, "observacao": null }] }
         /// </remarks>
-        /// <param name="command"></param>
+        /// <param name="criarPedidoDTO"></param>
         /// <returns>Retorna os dados do pedido</returns>
         /// <response code="201"></response>
         /// <response code="400">Erro de validação</response>
         /// <response code="500">Erro interno</response>
         [HttpPost]
-        public async Task<IActionResult> CriaPedido(CreatePedido command)
+        public async Task<IActionResult> CriaPedido(CriarPedidoDTO criarPedidoDTO)
         {
-            var id = await _mediator.Send(command);
+            var id = await _service.Criar(criarPedidoDTO);
             return Created("api/pedido", id);
         }
 
@@ -47,8 +46,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> ListaPedido()
         {
-            ListPedidos command = new();
-            var list = await _mediator.Send(command);
+            var list = await _service.ObterTodos();
             return Ok(list);
         }
 
@@ -67,9 +65,8 @@ namespace API.Controllers
         [Route("{id}/checkout")]
         public async Task<IActionResult> CheckoutPedido([FromRoute] int id)
         {
-            var command = new CheckoutPedido(id);
-            var result = await _mediator.Send(command);
-            return Ok(result);
+            await _service.RealizarChecktou(id);
+            return Ok();
         }
     }
 }

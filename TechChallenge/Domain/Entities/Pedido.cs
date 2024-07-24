@@ -1,10 +1,7 @@
 ﻿using Domain.Enuns;
-using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TechChallenge.Domain._Shared;
+using TechChallenge.Domain.Factory;
+using TechChallenge.Domain.Shared;
 
 namespace Domain.Entities
 {
@@ -14,6 +11,8 @@ namespace Domain.Entities
         {
             Status = StatusPedido.PENDENTE_PAGAMENTO;
             Itens = new();
+
+            Validate();
         }
 
         public int? ClienteId { get; private set; } // Referência ao agregado Cliente
@@ -28,19 +27,19 @@ namespace Domain.Entities
         public void AdicionarItens(List<PedidoItem> itens)
         {
             Itens.AddRange(itens);
-            Validar();
+            Validate();
         }
 
         public void AdicionarItem(PedidoItem item)
         {
             Itens.Add(item);
-            Validar();
+            Validate();
         }
 
         public void RemoverItem(PedidoItem item)
         {
             Itens.Remove(item);
-            Validar();
+            Validate();
         }
 
         public decimal CalculaValorTotal()
@@ -70,20 +69,11 @@ namespace Domain.Entities
             Status = StatusPedido.FINALIZADO;
         }
 
-        public void Validar()
+        public override void Validate()
         {
-            Validate(this, new PedidoValidator());
-        }
-
-    }
-
-    public class PedidoValidator : AbstractValidator<Pedido>
-    {
-        public PedidoValidator()
-        {
-            RuleFor(p => p.Itens)
-                .NotEmpty()
-                .WithMessage("Não é possível criar um pedido sem itens");
+            PedidoValidatorFactory.Create().Validar(this);
+            if (this.Notification.HasErrors())
+                throw new NotificationError(this.Notification.GetErrors());
         }
     }
 }

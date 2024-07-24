@@ -1,8 +1,6 @@
-﻿using Application.Features.ClienteContext;
-using Application.Models.ViewModel;
-using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using TechChallenge.Application.DTO;
+using TechChallenge.Controller;
 
 namespace API.Controllers
 {
@@ -10,11 +8,11 @@ namespace API.Controllers
     [ApiController]
     public class ClienteController : ControllerBase
     {
-        private IMediator _mediator;
+        private IClienteService _service;
 
-        public ClienteController(IMediator mediator)
+        public ClienteController(IClienteService service)
         {
-            _mediator = mediator;
+            _service = service;
         }
 
         /// <summary>
@@ -32,8 +30,7 @@ namespace API.Controllers
         [Route("{cpf}")]
         public async Task<IActionResult> BuscarPorCpf([FromRoute] string cpf)
         {
-            RequestClienteByCpf command = new() { Cpf = cpf };
-            var result = await _mediator.Send(command);
+            var result = await _service.ObterPorCPF(cpf);
             return Ok(result);
         }
 
@@ -44,15 +41,17 @@ namespace API.Controllers
         /// Cadastra um novo cliente. Exemplo:
         /// { "nome": "João Ferreira da Silva", "email": "joao.silva@provedor.com", "cpf": "12345678910" }
         /// </remarks>
-        /// <param name="command"></param>
+        /// <param name="criarClienteDTO"></param>
         /// <returns>Retorna os dados do cliente cadastrado</returns>
         /// <response code="201">Criado com sucesso</response>
         /// <response code="400">Erros de validação</response>
         /// <response code="500">Erro interno</response>
         [HttpPost]
-        public async Task<IActionResult> CadastrarCliente(CreateCliente command)
+        public async Task<IActionResult> CadastrarCliente(CriarClienteDTO criarClienteDTO)
         {
-            var result = await _mediator.Send(command);
+            var result = await _service.Criar(criarClienteDTO);
+            if (result is null)
+                return NotFound();
             return Created("/clientes", result);
         }
     }

@@ -1,10 +1,7 @@
 ﻿using Domain.Enuns;
-using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TechChallenge.Domain._Shared;
+using TechChallenge.Domain.Factory;
+using TechChallenge.Domain.Shared;
 
 namespace Domain.Entities
 {
@@ -16,8 +13,7 @@ namespace Domain.Entities
             Descricao = descricao;
             Categoria = categoria;
             Preco = preco;
-
-            Validate(this, new ProdutoValidator());
+            Validate();
         }
 
         public string Nome { get; private set; } = string.Empty;
@@ -40,34 +36,14 @@ namespace Domain.Entities
                 this.Preco = (decimal)preco;
             }
 
-            Validate(this, new ProdutoValidator());
+            Validate();
         }
-    }
 
-    public class ProdutoValidator : AbstractValidator<Produto>
-    {
-        public ProdutoValidator()
+        public override void Validate()
         {
-            RuleFor(p => p.Nome)
-                .NotEmpty()
-                .MinimumLength(3)
-                .WithMessage("Nome do produto deve ter tamanho mínimo de 3 caracteres");
-
-            RuleFor(p => p.Nome)
-                .MaximumLength(100)
-                .WithMessage("Nome deve ter no máximo 100 caracteres");
-
-            RuleFor(p => p.Preco)
-                .GreaterThan(0)
-                .WithMessage("Preço deve ser maior que zero");
-
-            RuleFor(p => p.Descricao)
-                .MaximumLength(255)
-                .WithMessage("Descrição deve ter no máximo 255 caracteres");
-
-            RuleFor(p => p.Categoria)
-                .IsInEnum()
-                .WithMessage("Categoria inválida ou inexistente");
+            ProdutoValidatorFactory.Create().Validar(this);
+            if (this.Notification.HasErrors())
+                throw new NotificationError(this.Notification.GetErrors());
         }
     }
 }

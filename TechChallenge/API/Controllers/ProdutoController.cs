@@ -1,8 +1,6 @@
-﻿using Application.Features.ProdutoContext;
-using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Text.Json.Serialization;
+﻿using Microsoft.AspNetCore.Mvc;
+using TechChallenge.Application.DTO;
+using TechChallenge.Controller;
 
 namespace API.Controllers
 {
@@ -10,11 +8,11 @@ namespace API.Controllers
     [ApiController]
     public class ProdutoController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly IProdutoService _service;
 
-        public ProdutoController(IMediator mediator)
+        public ProdutoController(IProdutoService service)
         {
-            _mediator = mediator;
+            _service = service;
         }
 
         /// <summary>
@@ -31,8 +29,7 @@ namespace API.Controllers
         [Route("{id}")]
         public async Task<IActionResult> ObterPorId([FromRoute] int id)
         {
-            RequestProdutoById command = new() { Id = id };
-            var result = await _mediator.Send(command);
+            var result = await _service.ObterPorId(id);
             return Ok(result);
         }
 
@@ -51,9 +48,7 @@ namespace API.Controllers
         [Route("categoria/{id}")]
         public async Task<IActionResult> ObterPorCategoria([FromRoute] int id)
         {
-            RequestProdutoByCategoria command = new() { CategoriaId = id };
-            var result = await _mediator.Send(command);
-
+            var result = await _service.ObterPorCategoria(id);
             return Ok(result);
         }
 
@@ -68,15 +63,15 @@ namespace API.Controllers
         ///     "preco": 27.50
         ///    }  
         /// </remarks>
-        /// <param name="command"></param>
+        /// <param name="produtoDTO"></param>
         /// <response code="201">Cadastrado com sucesso</response>
         /// <response code="400">Erros de validação</response>
         /// <response code="500">Erro no servidor</response>
         [HttpPost]
-        public async Task<IActionResult> Adicionar([FromBody] CreateProduto command)
+        public async Task<IActionResult> Adicionar([FromBody] CriarProdutoDTO produtoDTO)
         {
-            var id = await _mediator.Send(command);
-            return Created($"api/produtos/{id}", id);
+            var produto = await _service.Criar(produtoDTO);
+            return Created($"api/produtos/{produto.Id}", produto.Id);
         }
 
         /// <summary>
@@ -90,8 +85,7 @@ namespace API.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Deletar([FromRoute] int id)
         {
-            DeleteProduto command = new() { Id = id };
-            await _mediator.Send(command);
+            await _service.Remover(id);
             return NoContent();
         }
 
@@ -99,14 +93,14 @@ namespace API.Controllers
         /// Atualizar um produto
         /// </summary>
         /// <remarks>Atualiza um produto existente</remarks>
-        /// <param name="command">dados do produto atualizado</param>
+        /// <param name="editarProdutoDTO">dados do produto atualizado</param>
         /// <response code="204">Sucesso</response>
         /// <response code="400">Erro de validação</response>
         /// <response code="500">Erro no servidor</response>
         [HttpPut]
-        public async Task<IActionResult> Atualizar(UpdateProduto command)
+        public async Task<IActionResult> Atualizar(EditarProdutoDTO editarProdutoDTO)
         {
-            await _mediator.Send(command);
+            await _service.Editar(editarProdutoDTO);
             return NoContent();
         }
     }

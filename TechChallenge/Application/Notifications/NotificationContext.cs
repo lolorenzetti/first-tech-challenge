@@ -6,10 +6,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TechChallenge.Application.Notifications;
 
 namespace Application.Notifications
 {
-    public class NotificationContext
+    public class NotificationContext : INotificationContext
     {
         private readonly List<Notification> _notifications;
         public IReadOnlyCollection<Notification> Notifications => _notifications;
