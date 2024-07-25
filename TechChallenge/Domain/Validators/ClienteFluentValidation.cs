@@ -1,7 +1,7 @@
-﻿using Domain.Entities;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.Results;
 using System.Text.RegularExpressions;
+using TechChallenge.Domain.Entities;
 
 namespace TechChallenge.Domain.Validators
 {
@@ -24,7 +24,7 @@ namespace TechChallenge.Domain.Validators
 
         public void Validar(Cliente entity)
         {
-            ValidationResult r = this.Validate(entity);
+            ValidationResult r = Validate(entity);
 
             foreach (var item in r.Errors)
             {

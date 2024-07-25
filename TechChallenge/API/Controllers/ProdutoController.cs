@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TechChallenge.Application.Controllers.Produto;
 using TechChallenge.Application.DTO;
-using TechChallenge.Application.Services;
 
 namespace API.Controllers
 {
@@ -8,11 +8,11 @@ namespace API.Controllers
     [ApiController]
     public class ProdutoController : ControllerBase
     {
-        private readonly IProdutoService _service;
+        private readonly IProdutoController _controller;
 
-        public ProdutoController(IProdutoService service)
+        public ProdutoController(IProdutoController controller)
         {
-            _service = service;
+            _controller = controller;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace API.Controllers
         [Route("{id}")]
         public async Task<IActionResult> ObterPorId([FromRoute] int id)
         {
-            var result = await _service.ObterPorId(id);
+            var result = await _controller.ObterPorId(id);
             return Ok(result);
         }
 
@@ -48,7 +48,7 @@ namespace API.Controllers
         [Route("categoria/{id}")]
         public async Task<IActionResult> ObterPorCategoria([FromRoute] int id)
         {
-            var result = await _service.ObterPorCategoria(id);
+            var result = await _controller.ObterPorCategoria(id);
             return Ok(result);
         }
 
@@ -70,7 +70,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Adicionar([FromBody] CriarProdutoDTO produtoDTO)
         {
-            var produto = await _service.Criar(produtoDTO);
+            var produto = await _controller.Criar(produtoDTO);
             return Created($"api/produtos/{produto.Id}", produto.Id);
         }
 
@@ -85,7 +85,7 @@ namespace API.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Deletar([FromRoute] int id)
         {
-            await _service.Remover(id);
+            await _controller.Remover(id);
             return NoContent();
         }
 
@@ -100,7 +100,7 @@ namespace API.Controllers
         [HttpPut]
         public async Task<IActionResult> Atualizar(EditarProdutoDTO editarProdutoDTO)
         {
-            await _service.Editar(editarProdutoDTO);
+            await _controller.Editar(editarProdutoDTO);
             return NoContent();
         }
     }

@@ -1,17 +1,9 @@
-using API.Filters;
 using Application;
-using Domain.Ports;
 using Infra.Data;
-using Infra.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<NotificationFilter>();
-});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

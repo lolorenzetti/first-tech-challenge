@@ -1,15 +1,8 @@
-﻿using Application.Models.ViewModel;
-using Domain.Entities;
-using Domain.Ports;
-using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TechChallenge.Application.Notifications;
+﻿using TechChallenge.Application.UseCase;
+using TechChallenge.Domain.Entities;
+using TechChallenge.Domain.Ports;
 
-namespace TechChallenge.Application.UseCases.Obter
+namespace TechChallenge.Application.UseCases
 {
     public class ObterClientePorCpfUseCase : IObterClientePorCpfUseCase
     {

@@ -1,6 +1,6 @@
-﻿using Application.Models.ViewModel;
-using AutoMapper;
+﻿using AutoMapper;
 using Domain.Entities;
+using TechChallenge.Application.DTO;
 
 namespace TechChallenge.Application.Mappings
 {
@@ -8,8 +8,8 @@ namespace TechChallenge.Application.Mappings
     {
         public ProdutoMapper()
         {
-            CreateMap<Produto, ProdutoViewModel>();
-            CreateMap<IEnumerable<Produto>, ListProdutoViewModel>(); // NOTA: Porque não IEnumerable? Avaliar.
+            CreateMap<Produto, VisualizarProdutoDTO>();
+            CreateMap<IEnumerable<Produto>, ListaProdutosDTO>(); // NOTA: Porque não IEnumerable? Avaliar.
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using Domain.Entities;
-using TechChallenge.Application.DTO;
+﻿using TechChallenge.Application.DTO;
+using TechChallenge.Domain.Entities;
 
 namespace TechChallenge.Application.UseCases
 {

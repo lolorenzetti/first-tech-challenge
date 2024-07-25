@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Ports;
 using TechChallenge.Application.DTO;
-using TechChallenge.Application.UseCases.Obter;
+using TechChallenge.Application.UseCase;
 
 namespace TechChallenge.Application.UseCases
 {
@@ -21,11 +21,11 @@ namespace TechChallenge.Application.UseCases
             _clienteUseCase = clienteUseCase;
         }
 
-        public async Task<Pedido> Execute(CriarPedidoDTO request)
+        public async Task<Pedido> Execute(CriarPedidoDTO p)
         {
             Pedido pedido = new();
 
-            foreach (var i in request.Itens)
+            foreach (var i in p.Itens)
             {
                 var produto = await _produtoUseCase.ObterPorId(i.Id);
 
@@ -36,12 +36,12 @@ namespace TechChallenge.Application.UseCases
                 pedido.AdicionarItem(item);
             }
 
-            if (!string.IsNullOrEmpty(request.ClienteCpf))
+            if (!string.IsNullOrEmpty(p.ClienteCpf))
             {
-                var cliente = await _clienteUseCase.Execute(request.ClienteCpf);
+                var cliente = await _clienteUseCase.Execute(p.ClienteCpf);
 
                 if (cliente is null)
-                    throw new Exception($"Cliente com cpf: '{request.ClienteCpf}' não encontrado");
+                    throw new Exception($"Cliente com cpf: '{p.ClienteCpf}' não encontrado");
 
                 pedido.ReferenciarCliente(cliente.Id);
             }

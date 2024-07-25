@@ -1,14 +1,14 @@
-﻿using Application.Models.ViewModel;
-using AutoMapper;
-using Domain.Entities;
+﻿using AutoMapper;
+using TechChallenge.Application.DTO;
+using TechChallenge.Domain.Entities;
 
-namespace TechChallenge.Application.Mappings
+namespace TechChallenge.Application.Mappers
 {
     public sealed class ClienteMapper : Profile
     {
         public ClienteMapper()
         {
-            CreateMap<Cliente, ClienteViewModel>();
+            CreateMap<Cliente, VisualizarClienteDTO>();
         }
     }
 }

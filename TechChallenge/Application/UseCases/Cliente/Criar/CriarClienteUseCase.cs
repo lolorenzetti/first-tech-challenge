@@ -1,8 +1,8 @@
-﻿using Domain.Entities;
-using Domain.Ports;
-using TechChallenge.Application.DTO;
+﻿using TechChallenge.Application.DTO;
+using TechChallenge.Domain.Entities;
+using TechChallenge.Domain.Ports;
 
-namespace TechChallenge.Application.UseCases.Criar
+namespace TechChallenge.Application.UseCases
 {
     public class CriarClienteUseCase : ICriarClienteUseCase
     {
@@ -13,9 +13,9 @@ namespace TechChallenge.Application.UseCases.Criar
             _clienteRepository = clienteRepository;
         }
 
-        public async Task<Cliente> Execute(CriarClienteDTO criarClienteDTO)
+        public async Task<Cliente> Execute(CriarClienteDTO c)
         {
-            var cliente = new Cliente(criarClienteDTO.Nome, criarClienteDTO.Email, criarClienteDTO.Cpf);
+            var cliente = new Cliente(c.Nome, c.Email, c.Cpf);
             return await _clienteRepository.CadastrarCliente(cliente);
         }
     }

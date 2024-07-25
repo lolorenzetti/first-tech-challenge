@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TechChallenge.Application.Controllers.Cliente;
 using TechChallenge.Application.DTO;
-using TechChallenge.Application.Services;
 
 namespace API.Controllers
 {
@@ -8,11 +8,11 @@ namespace API.Controllers
     [ApiController]
     public class ClienteController : ControllerBase
     {
-        private IClienteService _service;
+        private IClienteController _controller;
 
-        public ClienteController(IClienteService service)
+        public ClienteController(IClienteController controller)
         {
-            _service = service;
+            _controller = controller;
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace API.Controllers
         [Route("{cpf}")]
         public async Task<IActionResult> BuscarPorCpf([FromRoute] string cpf)
         {
-            var result = await _service.ObterPorCPF(cpf);
+            var result = await _controller.ObterPorCPF(cpf);
             return Ok(result);
         }
 
@@ -49,7 +49,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CadastrarCliente(CriarClienteDTO criarClienteDTO)
         {
-            var result = await _service.Criar(criarClienteDTO);
+            var result = await _controller.Criar(criarClienteDTO);
             if (result is null)
                 return NotFound();
             return Created("/clientes", result);

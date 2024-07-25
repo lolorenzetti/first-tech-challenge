@@ -2,7 +2,7 @@
 using TechChallenge.Domain.Factory;
 using TechChallenge.Domain.Shared;
 
-namespace Domain.Entities
+namespace TechChallenge.Domain.Entities
 {
     public class Cliente : Entity
     {
@@ -22,8 +22,8 @@ namespace Domain.Entities
         public override void Validate()
         {
             ClienteValidatorFactory.Create().Validar(this);
-            if (this.Notification.HasErrors())
-                throw new NotificationError(this.Notification.GetErrors());
+            if (Notification.HasErrors())
+                throw new NotificationError(Notification.GetErrors());
         }
     }
 }

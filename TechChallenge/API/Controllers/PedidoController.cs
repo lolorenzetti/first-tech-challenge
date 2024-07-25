@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TechChallenge.Application.Controllers.Pedido;
 using TechChallenge.Application.DTO;
-using TechChallenge.Application.Services;
 
 namespace API.Controllers
 {
@@ -8,11 +8,11 @@ namespace API.Controllers
     [ApiController]
     public class PedidoController : ControllerBase
     {
-        private readonly IPedidoService _service;
+        private readonly IPedidoController _controller;
 
-        public PedidoController(IPedidoService mediator)
+        public PedidoController(IPedidoController controller)
         {
-            _service = mediator;
+            _controller = controller;
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CriaPedido(CriarPedidoDTO criarPedidoDTO)
         {
-            var id = await _service.Criar(criarPedidoDTO);
+            var id = await _controller.Criar(criarPedidoDTO);
             return Created("api/pedido", id);
         }
 
@@ -46,7 +46,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> ListaPedido()
         {
-            var list = await _service.ObterTodos();
+            var list = await _controller.ObterTodos();
             return Ok(list);
         }
 
@@ -65,7 +65,7 @@ namespace API.Controllers
         [Route("{id}/checkout")]
         public async Task<IActionResult> CheckoutPedido([FromRoute] int id)
         {
-            await _service.RealizarChecktou(id);
+            await _controller.RealizarChecktou(id);
             return Ok();
         }
     }
