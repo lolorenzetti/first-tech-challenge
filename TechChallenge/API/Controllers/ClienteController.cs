@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TechChallenge.Application.DTO;
-using TechChallenge.Controller;
+using TechChallenge.Application.Services;
 
 namespace API.Controllers
 {

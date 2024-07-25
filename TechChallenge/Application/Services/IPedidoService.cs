@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using TechChallenge.Application.DTO;
 
-namespace TechChallenge.Controller
+namespace TechChallenge.Application.Services
 {
     public interface IPedidoService
     {

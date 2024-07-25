@@ -4,7 +4,7 @@ using TechChallenge.Application.DTO;
 using TechChallenge.Application.UseCases.Criar;
 using TechChallenge.Application.UseCases.Obter;
 
-namespace TechChallenge.Controller
+namespace TechChallenge.Application.Services
 {
     public class ClienteService : IClienteService
     {

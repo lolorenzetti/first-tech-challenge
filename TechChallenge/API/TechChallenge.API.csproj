@@ -28,7 +28,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Application\TechChallenge.Application.csproj" />
     <ProjectReference Include="..\Infra\TechChallenge.Persistence.csproj" />
-    <ProjectReference Include="..\TechChallenge.Controller\TechChallenge.Controller.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

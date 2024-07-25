@@ -5,7 +5,7 @@ using TechChallenge.Application.DTO;
 using TechChallenge.Application.UseCases;
 using TechChallenge.Application.UseCases.Criar;
 
-namespace TechChallenge.Controller
+namespace TechChallenge.Application.Services
 {
     public class ProdutoService : IProdutoService
     {
