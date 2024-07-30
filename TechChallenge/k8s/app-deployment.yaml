@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: renan-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: minha-aplicacao-storage  ## nome que vou chamar dentro do container 
+  hostPath:
+    path: /mnt/data/renan-pv
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minha-aplicacao
+spec:
+  selector:
+    matchLabels:
+      app: minha-aplicacao
+  template:
+    metadata:
+      labels:
+        app: minha-aplicacao
+    spec:
+      containers:
+      - name: minha-aplicacao
+        image: minha-aplicacao-pv
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: "/data"
+          name: minha-aplicacao-storage ## referencia ao pv 
+        resources:
+          requests:
+            cpu: "400m"
+            memory: "512Mi"
+          limits:
+            cpu: "400m"
+            memory: "512Mi"
+        imagePullPolicy: IfNotPresent
+      volumes:
+      - name: minha-aplicacao-storage
+        hostPath:
+          path: "/mnt/data/renan-pv"
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: minha-aplicacao-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: minha-aplicacao
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 50
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minha-aplicacao-service
+spec:
+  type: NodePort
+  selector:
+    app: minha-aplicacao
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+    nodePort: 30036
